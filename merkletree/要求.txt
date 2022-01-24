@@ -1,0 +1,3 @@
+平衡二叉树
+vector<unsigned long> Merkle_Tree::getProof(unsigned long hash_value);
+给定一个哈希值，返回

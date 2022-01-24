@@ -1,0 +1,146 @@
+#include <iostream>
+#include <vector>
+#include <thread>
+#include <mutex>
+#define SIZE 100
+using namespace std;
+
+
+
+class HashTable{
+private:
+    std::mutex mtx;
+
+    int *T;//存储value
+    
+    int size;
+
+    int hash1(const int key);
+
+    int hash2(const int key);
+    
+    int get1(const int key);
+    
+    int get2(const int key);
+
+    void evict(int key, int which, int pre_pos);
+public:
+    HashTable();
+
+    //HashTable(int num);
+
+    void put(int key, int val);
+
+    int get(const int key); // return -1 on searching failure
+
+    void remove(int key);
+};
+HashTable::HashTable()
+{
+    size = SIZE;
+    T = new int[size];
+    for(int i = 0; i < size; ++i)
+        T[i] = 0;
+}
+/*HashTable::HashTable(int num)
+{
+    size = num;
+}*/
+int HashTable::hash1(const int key)
+{
+    int half_size = size / 2;
+    return key % half_size;
+}
+int HashTable::hash2(const int key)
+{
+    int half_size = size / 2;
+    return key / half_size % half_size + half_size;
+}
+int HashTable::get1(const int key)
+{
+    return (T[hash1(key)] == key) ? key : -1;
+}
+int HashTable::get2(const int key)
+{
+    return (T[hash2(key)] == key) ? key : -1;
+}
+int HashTable::get(const int key)
+{
+    if(key < 0)
+    {
+        return -1;
+    }
+    int resultKey = get1(key);
+    if(resultKey == -1)
+    {
+        resultKey = get2(key);
+    }
+    return T[resultKey];
+}
+void HashTable::put(const int key, const int val)
+{
+    if(key < 0)
+        return;
+    if(get(key) > 0)
+        return;
+    int k1 = hash1(key);
+    int k2 = hash2(key);
+    if(T[k1] == 0)
+    {
+        T[k1] = val;
+    }
+    else if(T[k2] == 0)
+    {
+        T[k2] = val;
+    }
+    else
+    {
+        
+        while(1)
+        {
+            int loopCount = 0;
+            int pre_pos = -1;
+            int pos;
+            for(; loopCount < SIZE; loopCount++)
+            {
+                pos = 
+            }
+        }
+        int evicted = val;
+        int which = 0 ;
+        int idx = hash1(evicted);
+        
+        while(T[idx] != 0)
+        {
+            
+        }
+    }
+}
+
+
+
+int main(){
+
+    HashTable ht = HashTable();
+
+    ht.put(1,1);
+
+    ht.put(2,2);
+
+    cout << ht.get(1)<<' ';
+
+    cout << ht.get(3)<<' ';
+
+    ht.put(2,1);
+
+    cout << ht.get(2)<<' ';
+
+    ht.remove(2);
+
+    cout << ht.get(2)<<' ';
+
+    ht.remove(3);
+
+    cout << ht.get(3)<<' ';
+
+}
